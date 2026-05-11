@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Grade Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0e17;
+      --surface: #131724;
+      --card: #1a2035;
+      --border: #242d45;
+      --accent: #4fffb0;
+      --accent2: #7c6aff;
+      --danger: #ff4f6a;
+      --warn: #ffb84f;
+      --text: #e8eaf2;
+      --muted: #6b7799;
+      --radius: 14px;
+    }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #131724 0%, #1a2035 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: var(--accent);
+      border-radius: 12px;
+      display: grid; place-items: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 22px;
+      color: #0b0e17;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.6rem;
+      letter-spacing: -0.5px;
+    }
+    header h1 span { color: var(--accent); }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+    /* GPA Dashboard */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .stat-card.green::before { background: var(--accent); }
+    .stat-card.purple::before { background: var(--accent2); }
+    .stat-card.warn::before { background: var(--warn); }
+    .stat-card.danger::before { background: var(--danger); }
+
+    .stat-label {
+      font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800;
+    }
+    .stat-card.green .stat-value { color: var(--accent); }
+    .stat-card.purple .stat-value { color: var(--accent2); }
+    .stat-card.warn .stat-value { color: var(--warn); }
+    .stat-card.danger .stat-value { color: var(--danger); }
+
+    /* Form */
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 28px;
+      margin-bottom: 32px;
+    }
+
+    .form-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .form-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    @media(max-width: 900px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+    @media(max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .field label {
+      display: block; font-size: 0.72rem; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+    }
+    .field input, .field select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--accent); }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .btn {
+      padding: 10px 22px; border: none; border-radius: 8px;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem;
+      cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+    }
+    .btn-primary { background: var(--accent); color: #0b0e17; }
+    .btn-primary:hover { background: #3deea0; transform: translateY(-1px); }
+    .btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 22px;
+      font-size: 0.85rem; z-index: 999;
+      transform: translateY(80px); opacity: 0;
+      transition: all 0.35s cubic-bezier(.22,1,.36,1);
+      max-width: 320px;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { border-left: 3px solid var(--accent); }
+    #toast.error { border-left: 3px solid var(--danger); }
+
+    /* Table */
+    .table-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+    }
+    .table-header h2 {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+    }
+
+    .search-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 14px;
+      color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.85rem;
+      outline: none; width: 200px;
+      transition: border-color 0.2s;
+    }
+    .search-box:focus { border-color: var(--accent); }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); padding: 10px 16px; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: rgba(79,255,176,0.04); }
+    tbody td { padding: 14px 16px; font-size: 0.88rem; }
+
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 99px;
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.5px;
+    }
+    .badge-A { background: rgba(79,255,176,0.15); color: var(--accent); }
+    .badge-B { background: rgba(124,106,255,0.15); color: var(--accent2); }
+    .badge-C { background: rgba(255,184,79,0.15); color: var(--warn); }
+    .badge-D { background: rgba(255,79,106,0.15); color: var(--danger); }
+    .badge-F { background: rgba(255,79,106,0.25); color: var(--danger); }
+
+    .actions { display: flex; gap: 8px; }
+    .icon-btn {
+      width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border);
+      background: transparent; cursor: pointer; display: grid; place-items: center;
+      transition: all 0.2s; color: var(--muted); font-size: 14px;
+    }
+    .icon-btn:hover.edit { border-color: var(--accent2); color: var(--accent2); background: rgba(124,106,255,0.1); }
+    .icon-btn:hover.del { border-color: var(--danger); color: var(--danger); background: rgba(255,79,106,0.1); }
+
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--muted);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.9rem; }
+
+    .loading { text-align: center; padding: 40px; color: var(--muted); }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(11,14,23,0.85);
+      z-index: 200; display: none; place-items: center;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.open { display: grid; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px; width: 90%; max-width: 500px;
+      animation: popIn 0.25s cubic-bezier(.22,1,.36,1);
+    }
+    @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal h3 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 20px; }
+    .modal-form { display: grid; gap: 14px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
+
+    .student-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+    .roll-number {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .student-group {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+    .student-group-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(79,255,176,0.03);
+      flex-wrap: wrap;
+    }
+    .student-group-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+    .student-summary {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    .student-summary strong {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">G</div>
+  <h1>Grade <span>Tracker</span></h1>
+</header>
+
+<div class="container">
+  <!-- Stats -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card green">
+      <div class="stat-label">Students</div>
+      <div class="stat-value" id="statGPA">—</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">Total Marks</div>
+      <div class="stat-value" id="statTotal">0</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="stat-label">Highest Grade</div>
+      <div class="stat-value" id="statHigh">—</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-label">Lowest Grade</div>
+      <div class="stat-value" id="statLow">—</div>
+    </div>
+  </div>
+
+  <!-- Add Form -->
+  <div class="form-card">
+    <div class="form-title"><span class="dot"></span> Add Student Marks</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Student Name</label>
+        <input type="text" id="studentName" placeholder="e.g. Aisha Khan"/>
+      </div>
+      <div class="field">
+        <label>Roll Number</label>
+        <input type="text" id="rollNumber" placeholder="e.g. 10A-04"/>
+      </div>
+      <div class="field">
+        <label>Subject Name</label>
+        <input type="text" id="subject" placeholder="e.g. Mathematics"/>
+      </div>
+      <div class="field">
+        <label>Grade (0–100)</label>
+        <input type="number" id="grade" placeholder="95" min="0" max="100"/>
+      </div>
+      <div class="field">
+        <label>Credits</label>
+        <input type="number" id="credits" placeholder="3" min="1" max="6"/>
+      </div>
+      <div class="field">
+        <label>Semester</label>
+        <input type="text" id="semester" placeholder="Fall 2025"/>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:16px;">
+      <label>Notes (optional)</label>
+      <input type="text" id="notes" placeholder="Any additional notes..."/>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="addGrade()">+ Add Marks</button>
+      <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-header">
+    <h2>All Student Marks</h2>
+    <input class="search-box" type="text" placeholder="Search..." oninput="filterTable(this.value)"/>
+  </div>
+
+  <div id="tableWrap">
+    <div class="loading">Loading grades...</div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>✏️ Edit Grade</h3>
+    <input type="hidden" id="editId"/>
+    <div class="modal-form">
+      <div class="field"><label>Student Name</label><input type="text" id="editStudentName"/></div>
+      <div class="field"><label>Roll Number</label><input type="text" id="editRollNumber"/></div>
+      <div class="field"><label>Subject Name</label><input type="text" id="editSubject"/></div>
+      <div class="field"><label>Grade (0–100)</label><input type="number" id="editGrade" min="0" max="100"/></div>
+      <div class="field"><label>Credits</label><input type="number" id="editCredits" min="1" max="6"/></div>
+      <div class="field"><label>Semester</label><input type="text" id="editSemester"/></div>
+      <div class="field"><label>Notes</label><input type="text" id="editNotes"/></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const API = '/api/grades';
+  let allGrades = [];
+
+  async function fetchGrades() {
+    try {
+      const res = await fetch(API);
+      const json = await res.json();
+      allGrades = json.data || [];
+      renderTable(allGrades);
+      renderStats(allGrades);
+    } catch(e) {
+      document.getElementById('tableWrap').innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>Could not connect to server. Make sure it's running.</p></div>`;
+    }
+  }
+
+  function letterGrade(g) {
+    if (g >= 90) return 'A';
+    if (g >= 80) return 'B';
+    if (g >= 70) return 'C';
+    if (g >= 60) return 'D';
+    return 'F';
+  }
+
+  function gradeToGPA(g) {
+    if (g >= 90) return 4.0;
+    if (g >= 80) return 3.0;
+    if (g >= 70) return 2.0;
+    if (g >= 60) return 1.0;
+    return 0.0;
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    }[char]));
+  }
+
+  function renderStats(data) {
+    if (!data.length) {
+      document.getElementById('statGPA').textContent = '—';
+      document.getElementById('statTotal').textContent = '0';
+      document.getElementById('statHigh').textContent = '—';
+      document.getElementById('statLow').textContent = '—';
+      return;
+    }
+    const totalCredits = data.reduce((a, d) => a + (d.credits || 3), 0);
+    const weightedSum = data.reduce((a, d) => a + gradeToGPA(d.grade) * (d.credits || 3), 0);
+    const gpa = (weightedSum / totalCredits).toFixed(2);
+    const grades = data.map(d => d.grade);
+    const studentCount = new Set(data.map(d => `${d.studentName || 'Unassigned'}-${d.rollNumber || ''}`)).size;
+    document.getElementById('statGPA').textContent = gpa;
+    document.getElementById('statTotal').textContent = studentCount;
+    document.getElementById('statHigh').textContent = Math.max(...grades);
+    document.getElementById('statLow').textContent = Math.min(...grades);
+  }
+
+  function renderTable(data) {
+    if (!data.length) {
+      document.getElementById('tableWrap').innerHTML = `<div class="empty-state"><div class="icon">📚</div><p>No subjects yet. Add your first one above!</p></div>`;
+      return;
+    }
+    const rows = data.map(d => {
+      const letter = letterGrade(d.grade);
+      return `<tr>
+        <td>${d.subject}</td>
+        <td><strong>${d.grade}</strong></td>
+        <td><span class="badge badge-${letter}">${letter}</span></td>
+        <td>${d.credits || 3}</td>
+        <td>${d.semester || '—'}</td>
+        <td style="color:var(--muted);font-size:0.8rem">${d.notes || '—'}</td>
+        <td>
+          <div class="actions">
+            <button class="icon-btn edit" title="Edit" onclick="openEdit('${d._id}')">✏️</button>
+            <button class="icon-btn del" title="Delete" onclick="deleteGrade('${d._id}', '${d.subject}')">🗑️</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('tableWrap').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Subject</th><th>Grade</th><th>Letter</th>
+          <th>Credits</th><th>Semester</th><th>Notes</th><th>Actions</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  function filterTable(q) {
+    const filtered = allGrades.filter(d =>
+      d.subject.toLowerCase().includes(q.toLowerCase()) ||
+      (d.semester || '').toLowerCase().includes(q.toLowerCase())
+    );
+    renderTable(filtered);
+  }
+
+  async function addGrade() {
+    const subject = document.getElementById('subject').value.trim();
+    const grade = parseFloat(document.getElementById('grade').value);
+    const credits = parseInt(document.getElementById('credits').value) || 3;
+    const semester = document.getElementById('semester').value.trim() || 'Fall 2025';
+    const notes = document.getElementById('notes').value.trim();
+
+    if (!subject || isNaN(grade)) return showToast('Subject and Grade are required', 'error');
+    if (grade < 0 || grade > 100) return showToast('Grade must be 0–100', 'error');
+
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subject, grade, credits, semester, notes })
+    });
+    const json = await res.json();
+    if (json.success) { clearForm(); fetchGrades(); showToast('Subject added!', 'success'); }
+    else showToast(json.message, 'error');
+  }
+
+  function clearForm() {
+    ['subject','grade','credits','semester','notes'].forEach(id => document.getElementById(id).value = '');
+  }
+
+  function openEdit(id) {
+    const d = allGrades.find(g => g._id === id);
+    if (!d) return;
+    document.getElementById('editId').value = d._id;
+    document.getElementById('editSubject').value = d.subject;
+    document.getElementById('editGrade').value = d.grade;
+    document.getElementById('editCredits').value = d.credits || 3;
+    document.getElementById('editSemester').value = d.semester || '';
+    document.getElementById('editNotes').value = d.notes || '';
+    document.getElementById('editModal').classList.add('open');
+  }
+
+  function closeModal() { document.getElementById('editModal').classList.remove('open'); }
+
+  async function saveEdit() {
+    const id = document.getElementById('editId').value;
+    const body = {
+      subject: document.getElementById('editSubject').value.trim(),
+      grade: parseFloat(document.getElementById('editGrade').value),
+      credits: parseInt(document.getElementById('editCredits').value) || 3,
+      semester: document.getElementById('editSemester').value.trim(),
+      notes: document.getElementById('editNotes').value.trim()
+    };
+    if (!body.subject || isNaN(body.grade)) return showToast('Subject and Grade required', 'error');
+    const res = await fetch(`${API}/${id}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const json = await res.json();
+    if (json.success) { closeModal(); fetchGrades(); showToast('Grade updated!', 'success'); }
+    else showToast(json.message, 'error');
+  }
+
+  async function deleteGrade(id, name) {
+    if (!confirm(`Delete "${name}"?`)) return;
+    const res = await fetch(`${API}/${id}`, { method: 'DELETE' });
+    const json = await res.json();
+    if (json.success) { fetchGrades(); showToast('Subject removed', 'success'); }
+    else showToast(json.message, 'error');
+  }
+
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
+    t.className = `show ${type}`;
+    setTimeout(() => t.className = '', 3000);
+  }
+
+  function renderTable(data) {
+    if (!data.length) {
+      document.getElementById('tableWrap').innerHTML = `<div class="empty-state"><div class="icon">--</div><p>No marks yet. Add a student's marks above.</p></div>`;
+      return;
+    }
+
+    const rows = data.map(d => {
+      const letter = letterGrade(d.grade);
+      const studentName = escapeHTML(d.studentName || 'Unassigned Student');
+      const rollNumber = escapeHTML(d.rollNumber || '');
+      const subject = escapeHTML(d.subject);
+      const semester = escapeHTML(d.semester || '-');
+      const notes = escapeHTML(d.notes || '-');
+
+      return `<tr>
+        <td>
+          <span class="student-name">${studentName}</span>
+          ${rollNumber ? `<span class="roll-number">Roll: ${rollNumber}</span>` : ''}
+        </td>
+        <td>${subject}</td>
+        <td><strong>${d.grade}</strong></td>
+        <td><span class="badge badge-${letter}">${letter}</span></td>
+        <td>${d.credits || 3}</td>
+        <td>${semester}</td>
+        <td style="color:var(--muted);font-size:0.8rem">${notes}</td>
+        <td>
+          <div class="actions">
+            <button class="icon-btn edit" title="Edit" onclick="openEdit('${d._id}')">E</button>
+            <button class="icon-btn del" title="Delete" onclick="deleteGrade('${d._id}', '${subject}')">X</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('tableWrap').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Student</th><th>Subject</th><th>Grade</th><th>Letter</th>
+          <th>Credits</th><th>Semester</th><th>Notes</th><th>Actions</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  function filterTable(q) {
+    const search = q.toLowerCase();
+    const filtered = allGrades.filter(d =>
+      (d.studentName || '').toLowerCase().includes(search) ||
+      (d.rollNumber || '').toLowerCase().includes(search) ||
+      (d.subject || '').toLowerCase().includes(search) ||
+      (d.semester || '').toLowerCase().includes(search)
+    );
+    renderTable(filtered);
+  }
+
+  async function addGrade() {
+    const studentName = document.getElementById('studentName').value.trim();
+    const rollNumber = document.getElementById('rollNumber').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const grade = parseFloat(document.getElementById('grade').value);
+    const credits = parseInt(document.getElementById('credits').value) || 3;
+    const semester = document.getElementById('semester').value.trim() || 'Fall 2025';
+    const notes = document.getElementById('notes').value.trim();
+
+    if (!studentName || !subject || isNaN(grade)) return showToast('Student, Subject and Grade are required', 'error');
+    if (grade < 0 || grade > 100) return showToast('Grade must be 0-100', 'error');
+
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentName, rollNumber, subject, grade, credits, semester, notes })
+    });
+    const json = await res.json();
+    if (json.success) { clearForm(); fetchGrades(); showToast('Marks added!', 'success'); }
+    else showToast(json.message, 'error');
+  }
+
+  function clearForm() {
+    ['studentName','rollNumber','subject','grade','credits','semester','notes'].forEach(id => document.getElementById(id).value = '');
+  }
+
+  function openEdit(id) {
+    const d = allGrades.find(g => g._id === id);
+    if (!d) return;
+    document.getElementById('editId').value = d._id;
+    document.getElementById('editStudentName').value = d.studentName || '';
+    document.getElementById('editRollNumber').value = d.rollNumber || '';
+    document.getElementById('editSubject').value = d.subject;
+    document.getElementById('editGrade').value = d.grade;
+    document.getElementById('editCredits').value = d.credits || 3;
+    document.getElementById('editSemester').value = d.semester || '';
+    document.getElementById('editNotes').value = d.notes || '';
+    document.getElementById('editModal').classList.add('open');
+  }
+
+  async function saveEdit() {
+    const id = document.getElementById('editId').value;
+    const body = {
+      studentName: document.getElementById('editStudentName').value.trim(),
+      rollNumber: document.getElementById('editRollNumber').value.trim(),
+      subject: document.getElementById('editSubject').value.trim(),
+      grade: parseFloat(document.getElementById('editGrade').value),
+      credits: parseInt(document.getElementById('editCredits').value) || 3,
+      semester: document.getElementById('editSemester').value.trim(),
+      notes: document.getElementById('editNotes').value.trim()
+    };
+    if (!body.studentName || !body.subject || isNaN(body.grade)) return showToast('Student, Subject and Grade required', 'error');
+    if (body.grade < 0 || body.grade > 100) return showToast('Grade must be 0-100', 'error');
+
+    const res = await fetch(`${API}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const json = await res.json();
+    if (json.success) { closeModal(); fetchGrades(); showToast('Marks updated!', 'success'); }
+    else showToast(json.message, 'error');
+  }
+
+  async function deleteGrade(id, name) {
+    if (!confirm(`Delete marks for "${name}"?`)) return;
+    const res = await fetch(`${API}/${id}`, { method: 'DELETE' });
+    const json = await res.json();
+    if (json.success) { fetchGrades(); showToast('Marks removed', 'success'); }
+    else showToast(json.message, 'error');
+  }
+
+  function getStudentKey(mark) {
+    return `${mark.studentName || 'Unassigned Student'}|${mark.rollNumber || ''}`;
+  }
+
+  function getStudentGroups(data) {
+    const groups = new Map();
+    data.forEach(mark => {
+      const key = getStudentKey(mark);
+      if (!groups.has(key)) {
+        groups.set(key, {
+          studentName: mark.studentName || 'Unassigned Student',
+          rollNumber: mark.rollNumber || '',
+          marks: []
+        });
+      }
+      groups.get(key).marks.push(mark);
+    });
+    return Array.from(groups.values()).sort((a, b) => a.studentName.localeCompare(b.studentName));
+  }
+
+  function calculateSummary(marks) {
+    const totalCredits = marks.reduce((sum, mark) => sum + (mark.credits || 3), 0);
+    const weightedSum = marks.reduce((sum, mark) => sum + gradeToGPA(mark.grade) * (mark.credits || 3), 0);
+    const grades = marks.map(mark => mark.grade);
+    return {
+      gpa: totalCredits ? (weightedSum / totalCredits).toFixed(2) : '0.00',
+      high: Math.max(...grades),
+      low: Math.min(...grades),
+      subjects: marks.length
+    };
+  }
+
+  function renderStats(data) {
+    if (!data.length) {
+      document.getElementById('statGPA').textContent = '0';
+      document.getElementById('statTotal').textContent = '0';
+      document.getElementById('statHigh').textContent = '-';
+      document.getElementById('statLow').textContent = '-';
+      return;
+    }
+
+    const studentCount = getStudentGroups(data).length;
+    const grades = data.map(d => d.grade);
+    document.getElementById('statGPA').textContent = studentCount;
+    document.getElementById('statTotal').textContent = data.length;
+    document.getElementById('statHigh').textContent = Math.max(...grades);
+    document.getElementById('statLow').textContent = Math.min(...grades);
+  }
+
+  function renderTable(data) {
+    if (!data.length) {
+      document.getElementById('tableWrap').innerHTML = `<div class="empty-state"><div class="icon">--</div><p>No marks found.</p></div>`;
+      return;
+    }
+
+    const groups = getStudentGroups(data);
+    document.getElementById('tableWrap').innerHTML = groups.map(group => {
+      const summary = calculateSummary(group.marks);
+      const studentName = escapeHTML(group.studentName);
+      const rollNumber = escapeHTML(group.rollNumber);
+      const rows = group.marks.map(d => {
+        const letter = letterGrade(d.grade);
+        const subject = escapeHTML(d.subject);
+        const semester = escapeHTML(d.semester || '-');
+        const notes = escapeHTML(d.notes || '-');
+
+        return `<tr>
+          <td>${subject}</td>
+          <td><strong>${d.grade}</strong></td>
+          <td><span class="badge badge-${letter}">${letter}</span></td>
+          <td>${d.credits || 3}</td>
+          <td>${semester}</td>
+          <td style="color:var(--muted);font-size:0.8rem">${notes}</td>
+          <td>
+            <div class="actions">
+              <button class="icon-btn edit" title="Edit" onclick="openEdit('${d._id}')">E</button>
+              <button class="icon-btn del" title="Delete" onclick="deleteGrade('${d._id}', '${subject}')">X</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+
+      return `<section class="student-group">
+        <div class="student-group-header">
+          <div>
+            <div class="student-group-title">${studentName}</div>
+            ${rollNumber ? `<span class="roll-number">Roll: ${rollNumber}</span>` : ''}
+          </div>
+          <div class="student-summary">
+            <span>GPA <strong>${summary.gpa}</strong></span>
+            <span>Subjects <strong>${summary.subjects}</strong></span>
+            <span>High <strong>${summary.high}</strong></span>
+            <span>Low <strong>${summary.low}</strong></span>
+          </div>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Subject</th><th>Grade</th><th>Letter</th>
+            <th>Credits</th><th>Semester</th><th>Notes</th><th>Actions</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </section>`;
+    }).join('');
+  }
+
+  document.getElementById('editModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('editModal')) closeModal();
+  });
+
+  fetchGrades();
+</script>
+</body>
+</html>
