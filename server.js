@@ -33,8 +33,3 @@ mongoose.connect(MONGO_URI)
     console.error(err);
     process.exit(1);
   });
-  .catch(err => {
-    console.error('❌ MongoDB connection error:', err.message);
-    console.log('Make sure MongoDB is running: mongod --dbpath /data/db');
-    process.exit(1);
-  });
