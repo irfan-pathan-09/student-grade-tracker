@@ -7,18 +7,18 @@ ________________________________________________________________________________
 
 ________________________________________
 ## Technology Stack Used
-+------------------------------------------------------------+
-|Category           | Technologies Used                      |
-|------------------------------------------------------------|
-|Frontend           |	HTML, CSS, JavaScript                  |
-|Backend            |	Node.js, Express.js                    |
-|Database           |	MongoDB, Mongoose                      |
-|Version Control    |	Git, GitHub                            |
-|Deployment         |  Railway                               |
-|Development Support|	Claude AI,                             | 
-|                   | Visual Studio Code with Codex Extension|
-|____________________________________________________________|
-## Step-by-Step Development Process
++------------------------------------------------------------+  
+|Category           | Technologies Used                      |  
+|------------------------------------------------------------|  
+|Frontend           |	HTML, CSS, JavaScript                  |  
+|Backend            |	Node.js, Express.js                    |  
+|Database           |	MongoDB, Mongoose                      |  
+|Version Control    |	Git, GitHub                            |  
+|Deployment         |  Railway                               |  
+|Development Support|	Claude AI,                             |  
+|                   | Visual Studio Code with Codex Extension|  
+|____________________________________________________________|  
+## Step-by-Step Development Process  
 
 ### 1. Idea and Project Planning
 The first step of the project development process was selecting suitable CRUD-based projects for college submission. Two practical web application ideas were chosen:
