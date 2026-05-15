@@ -8,14 +8,14 @@ ________________________________________________________________________________
 ________________________________________
 ## Technology Stack Used
 +------------------------------------------------------------+  
-|Category           | Technologies Used                      |  
+|**Category**           | Technologies Used                      |  
 |------------------------------------------------------------|  
-|Frontend           |	HTML, CSS, JavaScript                  |  
-|Backend            |	Node.js, Express.js                    |  
-|Database           |	MongoDB, Mongoose                      |  
-|Version Control    |	Git, GitHub                            |  
-|Deployment         |  Railway                               |  
-|Development Support|	Claude AI,                             |  
+|**Frontend**           |	HTML, CSS, JavaScript                  |  
+|**Backend**            |	Node.js, Express.js                    |  
+|**Database**           |	MongoDB, Mongoose                      |  
+|**Version Control**    |	Git, GitHub                            |  
+|**Deployment**         |  Railway                               |  
+|**Development Support**|	Claude AI,                             |  
 |                   | Visual Studio Code with Codex Extension|  
 |____________________________________________________________|  
 ## Step-by-Step Development Process  
