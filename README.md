@@ -1,8 +1,10 @@
-# COLLEGE PROJECT DEVELOPMENT PROCESS REPORT
-________________________________________
- ## Projects Completed
-1. Student Grade Tracker
-2. Inventory Management System
+# Stident Grade Tracker
+________________________________________________________________________________
+________________________________________________________________________________
+
+## Live Demo 
+1. https://student-grade-tracker-production-9a37.up.railway.app
+
 ________________________________________
 ## Technology Stack Used
 +------------------------------------------------------------+
@@ -179,7 +181,3 @@ The projects successfully demonstrated the practical implementation of modern we
 
 ________________________________________
 
-## Live Demo 
-1. https://student-grade-tracker-production-9a37.up.railway.app
-
-2. https://web-production-dbc7e.up.railway.app/
