@@ -1,22 +1,24 @@
-# COLLEGE PROJECT DEVELOPMENT PROCESS REPORT
-________________________________________
- ## Projects Completed
-1. Student Grade Tracker
-2. Inventory Management System
+# Stident Grade Tracker
+________________________________________________________________________________
+________________________________________________________________________________
+
+## Live Demo 
+1. https://student-grade-tracker-production-9a37.up.railway.app
+
 ________________________________________
 ## Technology Stack Used
-+------------------------------------------------------------+
-|Category           | Technologies Used                      |
-|------------------------------------------------------------|
-|Frontend           |	HTML, CSS, JavaScript                  |
-|Backend            |	Node.js, Express.js                    |
-|Database           |	MongoDB, Mongoose                      |
-|Version Control    |	Git, GitHub                            |
-|Deployment         |  Railway                               |
-|Development Support|	Claude AI,                             | 
-|                   | Visual Studio Code with Codex Extension|
-|____________________________________________________________|
-## Step-by-Step Development Process
++------------------------------------------------------------+  
+|**Category**           | Technologies Used                      |  
+|------------------------------------------------------------|  
+|**Frontend**           |	HTML, CSS, JavaScript                  |  
+|**Backend**            |	Node.js, Express.js                    |  
+|**Database**           |	MongoDB, Mongoose                      |  
+|**Version Control**    |	Git, GitHub                            |  
+|**Deployment**         |  Railway                               |  
+|**Development Support**|	Claude AI,                             |  
+|                   | Visual Studio Code with Codex Extension|  
+|____________________________________________________________|  
+## Step-by-Step Development Process  
 
 ### 1. Idea and Project Planning
 The first step of the project development process was selecting suitable CRUD-based projects for college submission. Two practical web application ideas were chosen:
@@ -179,7 +181,3 @@ The projects successfully demonstrated the practical implementation of modern we
 
 ________________________________________
 
-## Live Demo 
-1. https://student-grade-tracker-production-9a37.up.railway.app
-
-2. https://web-production-dbc7e.up.railway.app/
