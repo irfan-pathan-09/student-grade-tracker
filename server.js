@@ -25,7 +25,7 @@ mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
     app.listen(PORT, '0.0.0.0', () => {
-      console.log(`🚀 Student Grade Tracker running at http://localhost:${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   })
   .catch(err => {
