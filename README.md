@@ -5,19 +5,19 @@ ________________________________________________________________________________
 ## Live Demo of project
 1. https://student-grade-tracker-production-9a37.up.railway.app
 
-________________________________________
+___________________________________________________________________
 ## Technology Stack Used
-+------------------------------------------------------------+  
-|**Category**           | Technologies Used                      |  
-|------------------------------------------------------------|  
-|**Frontend**           |	HTML, CSS, JavaScript                  |  
-|**Backend**            |	Node.js, Express.js                    |  
-|**Database**           |	MongoDB, Mongoose                      |  
-|**Version Control**    |	Git, GitHub                            |  
-|**Deployment**         |  Railway                               |  
-|**Development Support**|	Claude AI,                             |  
-|                   | Visual Studio Code with Codex Extension|  
-|____________________________________________________________|  
++-------------------------------------------------------------------+  
+|**Category**           | Technologies Used                         |  
+|-------------------------------------------------------------------|  
+|**Frontend**           |	HTML, CSS, JavaScript                   |  
+|**Backend**            |	Node.js, Express.js                     |  
+|**Database**           |	MongoDB, Mongoose                       |  
+|**Version Control**    |	Git, GitHub                             |  
+|**Deployment**         |  Railway                                  |  
+|**Development Support**|	Claude AI,                              |  
+|                       | Visual Studio Code with Codex Extension   |  
+|___________________________________________________________________|  
 ## Step-by-Step Development Process  
 
 ### 1. Idea and Project Planning
