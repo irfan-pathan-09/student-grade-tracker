@@ -27,7 +27,7 @@ The first step of the project development process was selecting suitable CRUD-ba
 The Student Grade Tracker was developed to manage student records, marks, and grades efficiently.
 The Inventory Management System was created to manage inventory items for a small business or café-type environment.
 These projects were selected because they provide real-world functionality while demonstrating important full-stack development concepts such as database handling, CRUD operations, frontend-backend communication, and deployment.
-________________________________________
+___________________________________________________
 ### 2. Generating the Base Projects Using Claude AI
 To begin development quickly and efficiently, Claude AI was used to generate the initial base versions of both projects.
 Claude AI helped create:
@@ -38,7 +38,7 @@ Claude AI helped create:
 •	Simple frontend pages
 •	Initial business logic for handling records
 This provided a strong starting point for the development process and reduced the initial setup time.
-________________________________________
+___________________________________________________
 ### 3. Improving the Projects in Visual Studio Code
 After generating the base versions, the projects were opened in Visual Studio Code (VS Code) for further development and improvement.
 The Codex extension inside VS Code was used to improve different parts of the applications step by step.
