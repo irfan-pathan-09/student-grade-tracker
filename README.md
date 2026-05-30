@@ -18,7 +18,7 @@ ___________________________________________________________________
 |**Development Support**|	Claude AI,                              |  
 |                       | Visual Studio Code with Codex Extension   |  
 |___________________________________________________________________|  
-## Step-by-Step Development Process  
+## Step-by-Step Development Process of the project
 
 ### 1. Idea and Project Planning
 The first step of the project development process was selecting suitable CRUD-based projects for college submission. Two practical web application ideas were chosen:
